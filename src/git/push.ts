@@ -3,7 +3,7 @@ const git = simplegit();
 
 (async () => {
 	const USER = "harshuuu18";
-	const PASS = "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";
+	const PASS = "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";
 	const REPO = "github.com/nishant-zoomer/node-js";
 
 	const remote = `https://${USER}:${PASS}@${REPO}`;
