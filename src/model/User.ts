@@ -30,7 +30,7 @@ const UserSchema: Schema = new Schema(
 		},
 		phone: {
 			type: Number,
-			unique: true,
+			// unique: true,
 		},
 		address: [{ type: Types.ObjectId, ref: "Address" }],
 		device_token: {
