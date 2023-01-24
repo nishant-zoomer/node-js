@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 export default {
 	port: {
-		user: 4000,
+		user: 6000,
 		admin: 4001,
 	},
 	secret: "kjklj",
