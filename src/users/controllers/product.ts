@@ -79,6 +79,80 @@ export default {
 
 		return R(res, true, "Product List", products);
 	}),
+
+	search: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
+		if (!req.query.search) {
+			return R(res, false, "No Search Input Found");
+		}
+		let text = req.query.search || "";
+		// let search = new RegExp(text);
+		let user = await User.findById(req.user?._id);
+
+		if (!user) {
+			return R(res, false, "No user found");
+		}
+		if (!user.geo_location) {
+			return R(res, false, "No user found");
+		}
+		console.log(user.geo_location);
+		let latitude = user.geo_location.coordinates?.[0];
+		let longitude = user.geo_location.coordinates?.[1];
+
+		// latitude = 28.6448;
+		// longitude = 77.216721;
+
+		let distance = 1000 * 16e9;
+
+		// let products = await Product.aggregate([
+		// 	{
+		// 		$match: {
+		// 			user: {
+		// 				$ne: req.user?._id,
+		// 			},
+		// 		},
+		// 	},
+		// 	{
+		// 		$geoNear: {
+		// 			near: {
+		// 				type: "Point",
+		// 				coordinates: [longitude, latitude],
+		// 			},
+		// 			key: "geo_location",
+		// 			maxDistance: 1000 * 16e9,
+		// 			distanceField: "dist.calculated",
+		// 			spherical: true,
+		// 		},
+		// 	},
+		// ]);
+
+		let products = await Product.find({
+			name: {
+				$regex: text,
+				$options: "i",
+			},
+			user: { $ne: req.user?._id },
+			geo_location: {
+				$nearSphere: {
+					$geometry: {
+						type: "Point",
+						coordinates: [longitude, latitude],
+					},
+					$maxDistance: distance,
+				},
+			},
+		}).populate([
+			{
+				path: "user",
+				select: "name phone",
+			},
+		]);
+
+		await Product.populate(products, [{ path: "user", select: "name phone" }]);
+
+		console.log("products count: ", products.length);
+
+		return R(res, true, "Product List", products);
+	}),
 	myList: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
 		let products = await Product.find({
 			user: req.user._id,
@@ -86,35 +160,7 @@ export default {
 
 		return R(res, true, "Product List", products);
 	}),
-	search: asyncWrapper(async (req: Request, res: Response) => {
-		const search = new RegExp(req.params.text);
-		console.log(search);
-		let product = await Product.find({
-			$or: [
-				{
-					name: {
-						$regex: search,
-					},
-				},
-				{
-					description: {
-						$regex: search,
-					},
-				},
-				{
-					weight: {
-						$regex: search,
-					},
-				},
-			],
-		}).populate([{ path: "category" }, { path: "store" }, { path: "unit" }]);
 
-		if (!product) {
-			return R(res, false, "Invalid search term", {});
-		}
-
-		return R(res, true, "Product Search Data", product);
-	}),
 	show: asyncWrapper(async (req: Request, res: Response) => {
 		const _id = req.params._id;
 		let product = await Product.findById(_id).populate([
@@ -138,6 +184,10 @@ export default {
 
 		if (!user.geo_location) {
 			return R(res, false, "Invalid User Location");
+		}
+
+		if (!user.phone) {
+			return R(res, false, "Please your phone number first");
 		}
 
 		const newpath = process.cwd() + "/files/";

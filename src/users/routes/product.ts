@@ -8,7 +8,7 @@ router.get("/test", cn.test);
 router.get("/", cn.list);
 router.get("/my", cn.myList);
 
-router.get("/search/:text", cn.search);
+router.get("/search", cn.search);
 
 router.get("/:_id", cn.show);
 
