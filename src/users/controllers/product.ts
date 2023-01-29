@@ -44,9 +44,11 @@ export default {
 		}).populate([
 			{
 				path: "user",
-				select: "name phone geo_location",
+				select: "name phone",
 			},
 		]);
+
+		console.log("products count: ", products.length);
 
 		return R(res, true, "Product List", products);
 	}),
