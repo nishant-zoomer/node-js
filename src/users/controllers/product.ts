@@ -28,8 +28,8 @@ export default {
 		let latitude = user.geo_location.coordinates?.[0];
 		let longitude = user.geo_location.coordinates?.[1];
 
-		latitude = 28.6448;
-		longitude = 77.216721;
+		// latitude = 28.6448;
+		// longitude = 77.216721;
 
 		let distance = 0;
 
@@ -68,6 +68,8 @@ export default {
 		// 		select: "name phone",
 		// 	},
 		// ]);
+
+		await Product.populate(products, [{ path: "user", select: "name phone" }]);
 
 		console.log("products count: ", products.length);
 
