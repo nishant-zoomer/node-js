@@ -20,5 +20,6 @@ router.post("/social-login", otp.socialLogin);
 router.get("/me", user.me);
 
 router.post("/update-me", user.updateMe);
+router.post("/update-my-location", user.updateMyLocation);
 
 export default router;

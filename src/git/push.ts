@@ -1,9 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
 import simplegit from "simple-git";
 const git = simplegit();
 
 (async () => {
 	const USER = "harshuuu18";
-	const PASS = "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";
+	const PASS = process.env.GIT_USER_TOKEN || "";
 	const REPO = "github.com/nishant-zoomer/node-js";
 
 	const remote = `https://${USER}:${PASS}@${REPO}`;

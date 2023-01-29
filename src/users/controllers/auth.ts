@@ -354,7 +354,6 @@ export default {
 			return R(res, true, "User Data", user);
 		}),
 		updateMe: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
-			console.log("################################");
 			const schema = Joi.object({
 				name: Joi.string().required(),
 				phone: Joi.number().required(),
@@ -379,5 +378,32 @@ export default {
 
 			return R(res, true, "data updated Successfully", user);
 		}),
+
+		updateMyLocation: asyncWrapper(
+			async (req: UserAuthRequest, res: Response) => {
+				const schema = Joi.object({
+					latitude: Joi.number().required(),
+					longitude: Joi.number().required(),
+				}).validate(req.body);
+
+				if (schema.error) {
+					return R(res, false, schema.error.message);
+				}
+
+				const data = schema.value;
+
+				const user = await User.findById(req.user?._id);
+
+				if (!user) {
+					return R(res, false, "Invalid User", {});
+				}
+
+				user.geo_location = data;
+
+				await user.save();
+
+				return R(res, true, "location updated Successfully", user);
+			},
+		),
 	},
 };

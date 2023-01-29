@@ -36,7 +36,13 @@ const UserSchema: Schema = new Schema(
 		device_token: {
 			type: String,
 		},
-		geo_location: { type: Object },
+		geo_location: {
+			type: Object,
+			default: {
+				latitude: 0,
+				longitude: 0,
+			},
+		},
 	},
 	{ timestamps: true },
 );
