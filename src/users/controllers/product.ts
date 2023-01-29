@@ -16,7 +16,27 @@ export default {
 		return R(res, true, "hello", {});
 	}),
 	list: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
+		let user = await User.findById(req.user?._id);
+
+		if (!user) {
+			return R(res, false, "No user found");
+		}
+		let latitude = user.geo_location.latitude;
+		let longitude = user.geo_location.longitude;
+
 		let products = await Product.find({
+			geo_location: {
+				$nearSphere: {
+					$geometry: {
+						type: "Point",
+						coordinates: [
+							(longitude * Math.PI) / 180,
+							(latitude * Math.PI) / 180,
+						],
+					},
+				},
+			},
+
 			user: { $ne: req.user?._id },
 		}).populate([
 			{

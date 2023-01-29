@@ -6,7 +6,10 @@ export interface User extends Document {
 	phone: number;
 	address: Array<Types.ObjectId>;
 	device_token: string;
-	geo_location: Object;
+	geo_location: {
+		latitude: number;
+		longitude: number;
+	};
 
 	[key: string]: any;
 }
@@ -37,7 +40,12 @@ const UserSchema: Schema = new Schema(
 			type: String,
 		},
 		geo_location: {
-			type: Object,
+			longitude: {
+				type: Number,
+			},
+			latitude: {
+				type: Number,
+			},
 			default: {
 				latitude: 0,
 				longitude: 0,
@@ -46,5 +54,6 @@ const UserSchema: Schema = new Schema(
 	},
 	{ timestamps: true },
 );
+UserSchema.index({ geo_location: "2d" });
 
 export default model<User>("User", UserSchema);
