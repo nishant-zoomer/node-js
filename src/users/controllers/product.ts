@@ -31,7 +31,7 @@ export default {
 		// latitude = 28.6448;
 		// longitude = 77.216721;
 
-		let distance = 0;
+		let distance = 1000 * 16e9;
 
 		// let products = await Product.aggregate([
 		// 	{
@@ -58,15 +58,12 @@ export default {
 		let products = await Product.find({
 			user: { $ne: req.user?._id },
 			geo_location: {
-				$geoNear: {
-					near: {
+				$nearSphere: {
+					$geometry: {
 						type: "Point",
 						coordinates: [longitude, latitude],
 					},
-					key: "geo_location",
-					maxDistance: 1000 * 16e9,
-					distanceField: "dist.calculated",
-					spherical: true,
+					$maxDistance: distance,
 				},
 			},
 		}).populate([
