@@ -27,6 +27,10 @@ export default {
 		console.log(user.geo_location);
 		let latitude = user.geo_location.coordinates?.[0];
 		let longitude = user.geo_location.coordinates?.[1];
+
+		latitude = 28.6448;
+		longitude = 77.216721;
+
 		let distance = 0;
 
 		let products = await Product.find({
