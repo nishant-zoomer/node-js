@@ -33,26 +33,41 @@ export default {
 
 		let distance = 0;
 
-		let products = await Product.find({
-			user: { $ne: req.user?._id },
-			geo_location: {
-				$nearSphere: {
-					$geometry: {
+		let products = await Product.aggregate([
+			{
+				$geoNear: {
+					near: {
 						type: "Point",
-						coordinates: [
-							(longitude * Math.PI) / 180,
-							(latitude * Math.PI) / 180,
-						],
+						coordinates: [longitude, latitude],
 					},
-					$maxDistance: distance,
+					key: "geo_location",
+					maxDistance: 1000 * 16e9,
+					distanceField: "dist.calculated",
+					spherical: true,
 				},
 			},
-		}).populate([
-			{
-				path: "user",
-				select: "name phone",
-			},
 		]);
+
+		// let products = await Product.find({
+		// 	user: { $ne: req.user?._id },
+		// 	geo_location: {
+		// 		$nearSphere: {
+		// 			$geometry: {
+		// 				type: "Point",
+		// 				coordinates: [
+		// 					(longitude * Math.PI) / 180,
+		// 					(latitude * Math.PI) / 180,
+		// 				],
+		// 			},
+		// 			$maxDistance: distance,
+		// 		},
+		// 	},
+		// }).populate([
+		// 	{
+		// 		path: "user",
+		// 		select: "name phone",
+		// 	},
+		// ]);
 
 		console.log("products count: ", products.length);
 
