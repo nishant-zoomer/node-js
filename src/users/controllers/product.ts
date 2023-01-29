@@ -40,6 +40,8 @@ export default {
 						$ne: req.user?._id,
 					},
 				},
+			},
+			{
 				$geoNear: {
 					near: {
 						type: "Point",
