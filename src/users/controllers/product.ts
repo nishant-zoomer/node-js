@@ -166,6 +166,7 @@ export default {
 				name: title,
 				price: parseFloat(price),
 				photo: [filename],
+				geo_location: user?.geo_location,
 				// "geo_location": {
 				// 	"type": "Point",
 				// 	"coordinates": [-73.97, 40.77]
