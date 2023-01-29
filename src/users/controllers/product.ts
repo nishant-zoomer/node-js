@@ -18,7 +18,12 @@ export default {
 	list: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
 		let products = await Product.find({
 			user: { $ne: req.user?._id },
-		});
+		}).populate([
+			{
+				path: "user",
+				select: "name phone geo_location",
+			},
+		]);
 
 		return R(res, true, "Product List", products);
 	}),
