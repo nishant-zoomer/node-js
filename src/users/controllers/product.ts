@@ -21,23 +21,23 @@ export default {
 		if (!user) {
 			return R(res, false, "No user found");
 		}
-		let latitude = user.geo_location.latitude;
-		let longitude = user.geo_location.longitude;
+		console.log(user.geo_location);
+		// let latitude = user.geo_location.latitude;
+		// let longitude = user.geo_location.longitude;
 
 		let products = await Product.find({
-			geo_location: {
-				$nearSphere: {
-					$geometry: {
-						type: "Point",
-						coordinates: [
-							(longitude * Math.PI) / 180,
-							(latitude * Math.PI) / 180,
-						],
-					},
-				},
-			},
-
 			user: { $ne: req.user?._id },
+			// geo_location: {
+			// 	$nearSphere: {
+			// 		$geometry: {
+			// 			type: "Point",
+			// 			coordinates: [
+			// 				(longitude * Math.PI) / 180,
+			// 				(latitude * Math.PI) / 180,
+			// 			],
+			// 		},
+			// 	},
+			// },
 		}).populate([
 			{
 				path: "user",
@@ -98,6 +98,16 @@ export default {
 		return R(res, true, "Product Data", product);
 	}),
 	add: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
+		let user = await User.findById(req.user?._id);
+
+		if (!user) {
+			return R(res, false, "Invalid User");
+		}
+
+		if (!user.geo_location) {
+			return R(res, false, "Invalid User Location");
+		}
+
 		const newpath = process.cwd() + "/files/";
 		console.log(process.cwd());
 		console.log("newpath", newpath);
@@ -130,6 +140,10 @@ export default {
 				name: title,
 				price: parseFloat(price),
 				photo: [filename],
+				// "geo_location": {
+				// 	"type": "Point",
+				// 	"coordinates": [-73.97, 40.77]
+				// }
 			});
 
 			return res.json({

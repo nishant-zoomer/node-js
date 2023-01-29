@@ -7,6 +7,7 @@ export interface Product extends Document {
 	photo: Array<string>;
 	price: number; //10 rs
 	active: boolean;
+	geo_location: any;
 	[key: string]: any;
 }
 
@@ -23,8 +24,13 @@ const ProductSchema: Schema = new Schema(
 		price: { type: Number },
 		// unit: { type: String },
 		active: Boolean,
+		geo_location: {
+			type: { type: String },
+			coordinates: [],
+		},
 	},
 	{ timestamps: true },
 );
+ProductSchema.index({ geo_location: "2dsphere" });
 
 export default model<Product>("Product", ProductSchema);

@@ -398,7 +398,10 @@ export default {
 					return R(res, false, "Invalid User", {});
 				}
 
-				user.geo_location = data;
+				user.geo_location = {
+					type: "Point",
+					coordinates: [data.longitude, data.latitude],
+				};
 
 				await user.save();
 
