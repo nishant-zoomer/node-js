@@ -21,23 +21,26 @@ export default {
 		if (!user) {
 			return R(res, false, "No user found");
 		}
+		if (!user.geo_location) {
+			return R(res, false, "No user found");
+		}
 		console.log(user.geo_location);
-		// let latitude = user.geo_location.latitude;
-		// let longitude = user.geo_location.longitude;
+		let latitude = user.geo_location.coordinates?.[0];
+		let longitude = user.geo_location.coordinates?.[1];
 
 		let products = await Product.find({
 			user: { $ne: req.user?._id },
-			// geo_location: {
-			// 	$nearSphere: {
-			// 		$geometry: {
-			// 			type: "Point",
-			// 			coordinates: [
-			// 				(longitude * Math.PI) / 180,
-			// 				(latitude * Math.PI) / 180,
-			// 			],
-			// 		},
-			// 	},
-			// },
+			geo_location: {
+				$nearSphere: {
+					$geometry: {
+						type: "Point",
+						coordinates: [
+							(longitude * Math.PI) / 180,
+							(latitude * Math.PI) / 180,
+						],
+					},
+				},
+			},
 		}).populate([
 			{
 				path: "user",
