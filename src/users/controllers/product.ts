@@ -27,6 +27,7 @@ export default {
 		console.log(user.geo_location);
 		let latitude = user.geo_location.coordinates?.[0];
 		let longitude = user.geo_location.coordinates?.[1];
+		let distance = 10;
 
 		let products = await Product.find({
 			user: { $ne: req.user?._id },
@@ -39,6 +40,7 @@ export default {
 							(latitude * Math.PI) / 180,
 						],
 					},
+					$maxDistance: distance,
 				},
 			},
 		}).populate([
