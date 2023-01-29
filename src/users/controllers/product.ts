@@ -81,6 +81,7 @@ export default {
 	}),
 
 	search: asyncWrapper(async (req: UserAuthRequest, res: Response) => {
+		console.log(req.query.search);
 		if (!req.query.search) {
 			return R(res, false, "No Search Input Found");
 		}
@@ -146,8 +147,6 @@ export default {
 				select: "name phone",
 			},
 		]);
-
-		await Product.populate(products, [{ path: "user", select: "name phone" }]);
 
 		console.log("products count: ", products.length);
 
