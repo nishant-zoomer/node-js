@@ -8,6 +8,6 @@ export default {
 	secret: "kjklj",
 	google: {
 		client_id:
-			"553370443850-slig3nq86k5j10ke7hbvf12uf97vk29s.apps.googleusercontent.com",
+			"553370443850-lugninbo37ejm3mmq5m22bc0j9jo1nre.apps.googleusercontent.com",
 	},
 };
