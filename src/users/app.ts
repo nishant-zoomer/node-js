@@ -9,6 +9,7 @@ import cors from "cors";
 /**
  * @routes
  */
+import test from '@users/routes/test'
 import auth from "@users/routes/auth";
 import product from "@users/routes/product";
 import _public from "@users/routes/public";
@@ -38,6 +39,12 @@ mongoose.connect(db.URI).then((d) => {
 	 * @handlers public
 	 */
 	app.use(_public);
+
+
+	/**
+	 * @handlers test
+	 */
+	app.use(test);
 
 	/**
 	 * @middleware verifyuser
